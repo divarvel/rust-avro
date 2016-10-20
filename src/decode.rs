@@ -154,7 +154,12 @@ pub fn decode<'a, R: Read>(reader: &mut R, schema: &Schema<'a>)
         //    }
         //    Ok(Value::Error(inner_schema, values))
         //},
-        //Schema::Enum(ref inner_schema) => ,
+        &Schema::Enum(ref inner_schema) => {
+            match decode(reader, &Schema::Int) {
+                Ok(i) => Ok(Value::Enum(inner_schema.clone(), i.unwrap_int())),
+                Err(e) => Err(e)
+            }
+        },
         //Schema::Array { items } => ,
         //Schema::Map { values } => ,
         //Schema::Union { tys } => ,
